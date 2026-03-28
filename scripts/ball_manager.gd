@@ -6,6 +6,7 @@ var ball_scene = preload("res://scenes/ball.tscn")
 @onready var screen_size = get_viewport_rect().size
 @onready var trainer = get_parent().get_node("trainer")
 @onready var ball = get_parent().get_node("ball")
+@onready var bot = get_parent().get_node("bot")
 
 var direction: Vector2 = Vector2.ZERO
 var speed: float = 500
@@ -34,7 +35,7 @@ func place_ball_at_random_edge():
 		3: ball.position = Vector2(screen_size.x, randf() * screen_size.y * 2 - screen_size.y)      # right
 
 	# aim directly at trainer
-	direction = (trainer.position - ball.position).normalized()
+	direction = (bot.position - ball.position).normalized()
 
 	# check if offscreen for camera-centered coordinates
 func is_offscreen(pos: Vector2) -> bool:

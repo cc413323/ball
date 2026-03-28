@@ -31,7 +31,7 @@ func _physics_process(delta: float) -> void:
 	dot_forward_ball = forward.dot(vector_to_ball.normalized())
 	cross_forward_ball = forward.cross(vector_to_ball.normalized())
 	
-	if trainer.direction.length() > 0.1 or randf() < 0.1:
+	if trainer.direction.length() > 0.1 or randf() < 0.03:
 		save_game()
 		
 
