@@ -12,11 +12,11 @@ script = ExtResource("1_jyhfs")
 [node name="ball" parent="." unique_id=123634047 instance=ExtResource("1_0wfyh")]
 position = Vector2(-255, -330)
 
-[node name="bot" parent="." unique_id=1989567716 instance=ExtResource("2_sugp2")]
-
 [node name="trainer" parent="." unique_id=1533411418 instance=ExtResource("4_jyhfs")]
 visible = false
 
 [node name="data_collection" parent="." unique_id=1377787355 instance=ExtResource("5_tbgi4")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=988478782]
+
+[node name="bot" parent="." unique_id=1378102333 instance=ExtResource("2_sugp2")]

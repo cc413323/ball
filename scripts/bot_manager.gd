@@ -2,7 +2,9 @@ extends CharacterBody2D  # or whatever your bot node is
 
 # --- Config ---
 var speed = 200.0
-var A = []  # trained 3x2 matrix
+var A = []  # trained 5x2 matrix
+var mean = []
+var std = []
 var json = JSON.new()
 
 # reference to the ball node
@@ -15,8 +17,10 @@ func _ready():
 		file.close()
 
 		if json.parse(text) == OK:
-			A = json.data
-			print("Loaded model:", A)
+			A = json.data["A"]
+			mean = json.data["mean"]
+			std = json.data["std"]
+			print("Loaded model")
 		else:
 			push_error("Failed to parse JSON!")
 	else:
@@ -25,18 +29,37 @@ func _ready():
 # --- Compute input features ---
 func compute_features(bot_pos: Vector2, bot_theta: float, ball_pos: Vector2) -> Array:
 	var vector_to_ball = ball_pos - bot_pos
-	var distance = vector_to_ball.length()
+	var distance = clamp(vector_to_ball.length() / 500.0, 0, 1)
 
 	var forward = Vector2(cos(bot_theta), sin(bot_theta))
 	var dot_forward_ball = forward.dot(vector_to_ball.normalized())
-	var cross_forward_ball = forward.x * vector_to_ball.y - forward.y * vector_to_ball.x
-
-	return [distance, dot_forward_ball, cross_forward_ball]
+	
+	var cross_forward_ball = forward.cross(vector_to_ball.normalized())
+	#var cross_forward_ball = forward.x * vector_to_ball.y - forward.y * vector_to_ball.x
+	
+	
+	var screen = get_viewport_rect().size  # screen width and height
+	var half_w = screen.x / 2
+	var half_h = screen.y / 2
+	# normalize so 0 = left/top edge, 1 = right/bottom edge
+	var fx = (global_position.x + half_w) / screen.x
+	var fy = (global_position.y + half_h) / screen.y
+	
+	return [distance, dot_forward_ball, cross_forward_ball,fx,fy]
 
 # --- Predict movement ---
 func predict_move(features: Array) -> Vector2:
-	var dx = features[0] * A[0][0] + features[1] * A[1][0] + features[2] * A[2][0]
-	var dy = features[0] * A[0][1] + features[1] * A[1][1] + features[2] * A[2][1]
+	var norm = []
+	for i in range(features.size()):
+		norm.append((features[i] - mean[i]) / std[i])
+
+	var dx = 0.0
+	var dy = 0.0
+	
+	for i in range(5):
+		dx += norm[i] * A[i][0]
+		dy += norm[i] * A[i][1]
+
 	return Vector2(dx, dy)
 
 # --- Snap to 8 directions ---
