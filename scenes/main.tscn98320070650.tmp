@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cq8ao8m8osgt0"]
+
+[ext_resource type="PackedScene" uid="uid://ci71vkl0uvlrf" path="res://scenes/ball.tscn" id="1_0wfyh"]
+[ext_resource type="Script" uid="uid://chrq1arytmsa0" path="res://scripts/main.gd" id="1_jyhfs"]
+[ext_resource type="Script" uid="uid://drtj2e7s1iilm" path="res://scripts/data_collection.gd" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://drmri263pxl4d" path="res://scenes/trainer.tscn" id="4_jyhfs"]
+
+[node name="main" type="Node2D" unique_id=564643052]
+script = ExtResource("1_jyhfs")
+
+[node name="ball" parent="." unique_id=123634047 instance=ExtResource("1_0wfyh")]
+position = Vector2(-550, -300)
+
+[node name="data_collection" type="Node2D" parent="." unique_id=470377269 groups=["Persist"]]
+script = ExtResource("3_sugp2")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=988478782]
+
+[node name="trainer" parent="." unique_id=1533411418 instance=ExtResource("4_jyhfs")]

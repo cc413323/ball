@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://yfphwolwg00r"]
+
+[ext_resource type="Script" uid="uid://drtj2e7s1iilm" path="res://scripts/data_collection.gd" id="1_lasf5"]
+
+[node name="data_collection" type="Node2D" unique_id=1377787355 groups=["Persist"]]
+script = ExtResource("1_lasf5")
