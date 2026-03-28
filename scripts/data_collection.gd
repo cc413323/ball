@@ -19,6 +19,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
+	#clear()
 	var distance = max(main.distance, 0.001)
 	
 	vector_to_ball_x = ball.position.x - trainer.position.x
@@ -28,12 +29,20 @@ func _physics_process(delta: float) -> void:
 	var forward = trainer.direction.normalized()
 	dot_forward_ball = (forward.dot(Vector2(vector_to_ball_x, vector_to_ball_y))) / distance
 	cross_forward_ball = forward_x * vector_to_ball_y - forward_y * vector_to_ball_x
-	#clear()
+	
 	if trainer.direction.length() > 0.1:
 		save_game()
+		
 
 
 func save():
+	var screen = get_viewport_rect().size  # screen width and height
+	var half_w = screen.x / 2
+	var half_h = screen.y / 2
+
+	# normalize so 0 = left/top edge, 1 = right/bottom edge
+	var fx = (trainer.global_position.x + half_w) / screen.x
+	var fy = (trainer.global_position.y + half_h) / screen.y
 	var save_dict = {
 		"distance" : clamp(main.distance / 500.0, 0, 1),
 		"dot_product": dot_forward_ball,
@@ -45,7 +54,11 @@ func save():
 
 func clear():
 	var save_file = FileAccess.open("user://train.save", FileAccess.WRITE)
-
+	if save_file:
+		save_file.close()
+	else:
+		print("Failed to clear train.save!")
+		
 func save_game():
 	var save_file = FileAccess.open("user://train.save", FileAccess.READ_WRITE)
 	var save_nodes = get_tree().get_nodes_in_group("Persist")
@@ -69,3 +82,5 @@ func save_game():
 
 		# Store the save dictionary as a new line in the save file.
 		save_file.store_line(json_string)
+		
+	save_file.close()

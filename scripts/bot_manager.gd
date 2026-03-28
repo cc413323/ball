@@ -56,7 +56,7 @@ func snap_8_directions(vec: Vector2) -> Vector2:
 func _physics_process(delta):
 	var features = compute_features(global_position, rotation, ball.global_position)
 	var move_vec = predict_move(features)
-	move_vec = snap_8_directions(move_vec)
+	#move_vec = snap_8_directions(move_vec)
 
 	move_vec = move_vec.normalized() * speed
 
@@ -65,11 +65,14 @@ func _physics_process(delta):
 
 	move_and_slide()  # NO arguments in Godot 4!
 	
-	# --- Clamp to screen relative to (0,0) center ---
-	var screen_size = get_viewport_rect().size
-	var margin = 20
-	var half_w = screen_size.x / 2
-	var half_h = screen_size.y / 2
+	var margin = 50
+	var screen = get_viewport_rect().size
 
-	global_position.x = clamp(global_position.x, -half_w + margin, half_w - margin)
-	global_position.y = clamp(global_position.y, -half_h + margin, half_h - margin)
+	if global_position.x < margin:
+		move_vec.x += 1
+	if global_position.x > screen.x - margin:
+		move_vec.x -= 1
+	if global_position.y < margin:
+		move_vec.y += 1
+	if global_position.y > screen.y - margin:
+		move_vec.y -= 1
