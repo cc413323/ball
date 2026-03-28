@@ -78,7 +78,13 @@ func snap_8_directions(vec: Vector2) -> Vector2:
 # --- Main movement loop ---
 func _physics_process(delta):
 	var features = compute_features(global_position, rotation, ball.global_position)
+	if features[0] < 0.05:  # distance already normalized
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
 	var move_vec = predict_move(features)
+	if move_vec.length() < 0.2:
+		move_vec = Vector2.ZERO
 	#move_vec = snap_8_directions(move_vec)
 
 	move_vec = move_vec.normalized() * speed
@@ -99,3 +105,7 @@ func _physics_process(delta):
 		move_vec.y += 1
 	if global_position.y > screen.y - margin:
 		move_vec.y -= 1
+		
+	if move_vec.length() < 0.1:
+		move_vec = Vector2.ZERO
+		
