@@ -12,6 +12,7 @@ var k: Array[int] = [1]
 @onready var dot_forward_ball = (forward_x * vector_to_ball_x + forward_y * vector_to_ball_y) / main.distance
 @onready var cross_forward_ball = forward_x * vector_to_ball_y - forward_y * vector_to_ball_x
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
@@ -19,20 +20,24 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
-	#clear()
-	var distance = max(main.distance, 0.001)
 	
-	vector_to_ball_x = ball.position.x - trainer.position.x
-	vector_to_ball_y = ball.position.y - trainer.position.y
-	var vector_to_ball = Vector2(vector_to_ball_x, vector_to_ball_y)
-	forward_x = trainer.direction.normalized().x
-	forward_y = trainer.direction.normalized().y
-	var forward = trainer.direction.normalized()
-	dot_forward_ball = forward.dot(vector_to_ball.normalized())
-	cross_forward_ball = forward.cross(vector_to_ball.normalized())
+	if $"..".shouldTrain:
+		clear()
+		var distance = max(main.distance, 0.001)
+		
+		vector_to_ball_x = ball.position.x - trainer.position.x
+		vector_to_ball_y = ball.position.y - trainer.position.y
+		var vector_to_ball = Vector2(vector_to_ball_x, vector_to_ball_y)
+		forward_x = trainer.direction.normalized().x
+		forward_y = trainer.direction.normalized().y
+		var forward = trainer.direction.normalized()
+		dot_forward_ball = forward.dot(vector_to_ball.normalized())
+		cross_forward_ball = forward.cross(vector_to_ball.normalized())
+		
+		if trainer.direction.length() > 0.1 or randf() < 0.03:
+			save_game()
+		
 	
-	if trainer.direction.length() > 0.1 or randf() < 0.03:
-		save_game()
 		
 
 

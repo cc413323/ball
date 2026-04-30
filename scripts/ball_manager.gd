@@ -35,7 +35,10 @@ func place_ball_at_random_edge():
 		3: ball.position = Vector2(screen_size.x, randf() * screen_size.y * 2 - screen_size.y)      # right
 
 	# aim directly at trainer
-	direction = (bot.position - ball.position).normalized()
+	if $"..".shouldTrain:
+		direction = (trainer.position - ball.position).normalized()
+	else:
+		direction = (bot.position - ball.position).normalized()
 
 	# check if offscreen for camera-centered coordinates
 func is_offscreen(pos: Vector2) -> bool:
